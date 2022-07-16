@@ -7,3 +7,7 @@
 `hh compile`
 - Deploy contracts
 `hh deploy`
+
+##  Frontend (Vite + React + TailwindCSS)
+- Start
+`npm run dev`
