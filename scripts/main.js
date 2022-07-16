@@ -1,5 +1,8 @@
+const { getNamedAccounts } = require('hardhat')
+
 const main = async () => {
-    console.log('it Runs')
+  const { deployer } = await getNamedAccounts();
+  const contract = await ethers.getContract("Contract", deployer);
 }
 
 main()
