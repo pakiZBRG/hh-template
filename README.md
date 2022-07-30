@@ -1,3 +1,9 @@
+## Create .env file
+- `PRIVATE_KEY`
+- `RINKEBY_RPC_URL`
+- `ETHERSCAN_API_KEY`
+- `COINMARKETCAP_API_KEY`
+
 ## Template for building Hardhat projects in Solidity
 - Run the tests
 `hh test`
