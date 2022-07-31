@@ -15,9 +15,9 @@ contract Contract is KeeperCompatible {
     }
 
     function checkUpkeep(
-        bytes calldata /* checkData */
+        bytes memory /* checkData */
     )
-        external
+        public
         view
         override
         returns (
