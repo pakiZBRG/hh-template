@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Nav } from './components'
+import { Nav, Loader } from './components'
 import { ethers } from 'ethers';
 import { abi, contractAddress } from './contract';
 import { formatBigNumber } from './utils';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const provider = new ethers.providers.Web3Provider(window.ethereum);
-const signer = provider.getSigner();
+let provider, signer
+if (window.ethereum) {
+  provider = new ethers.providers.Web3Provider(window.ethereum);
+  signer = provider.getSigner()
+}
 
 const App = () => {
   const [account, setAccount] = useState({ address: '', balance: '' });
   const [metamaskMessage, setMetamaskMessage] = useState(false);
+  const [chainMessage, setChainMessage] = useState('')
 
   const getContract = async (signerOrProvider) => {
     const network = await provider.getNetwork();
@@ -30,6 +36,22 @@ const App = () => {
     return address;
   }
 
+  const getCurrentNetwork = async () => {
+    const network = await provider.getNetwork();
+    if (contractAddress[+network.chainId]) {
+      setChainMessage("")
+    } else {
+      setChainMessage("Please use Goerli network")
+      if (!contractAddress[+network.chainId]) {
+        await ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x5' }]
+        });
+      }
+      window.location.reload()
+    }
+  }
+
   useEffect(() => {
     if (typeof ethereum !== 'undefined') {
       ethereum.on('accountsChanged', async accounts => {
@@ -43,9 +65,11 @@ const App = () => {
         if (contractAddress[+chainId]) {
           setChainMessage("")
         } else {
-          setChainMessage("Please use Rinkeby")
+          setChainMessage("Please use Goerli network")
         }
       });
+
+      getCurrentNetwork();
       isConnected()
         .then(async () => await connectWallet())
         .catch(err => console.log(err.message))
@@ -55,13 +79,21 @@ const App = () => {
   }, [])
 
   return (
-    <div className='p-4 min-h-screen bg-black'>
-      <Nav
-        connectWallet={connectWallet}
-        account={account}
-        metamaskMessage={metamaskMessage}
-      />
-    </div>
+    <>
+      <ToastContainer position='bottom-right' theme='dark' />
+      <div className='min-h-screen gradient-background flex flex-col justify-between'>
+        <Nav
+          connectWallet={connectWallet}
+          account={account}
+          metamaskMessage={metamaskMessage}
+        />
+        {chainMessage ?
+          <p className='text-center mt-16 text-3xl'>{chainMessage}</p>
+          :
+          <p>Hello <Loader /></p>
+        }
+      </div>
+    </>
   )
 }
 

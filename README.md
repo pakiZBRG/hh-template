@@ -1,8 +1,10 @@
 ## Create .env file
-- `PRIVATE_KEY`
-- `RINKEBY_RPC_URL`
-- `ETHERSCAN_API_KEY`
+- `PRIVATE_KEY` - private key of one of your Metamask account
+- `GOERLI_RPC_URL` - Goerli RPC URL from Alchemy
+- `ETHERSCAN_API_KEY` - for contract verification
 - `COINMARKETCAP_API_KEY`
+
+## Scripts
 
 ## Template for building Hardhat projects in Solidity
 - Run the tests
@@ -15,8 +17,8 @@
 `hh deploy`
 - Spin up your local blockchain to test locally
 `hh node`
-- Deploy contract to a **Rinkeby (only)** testnet
-`hh deploy --network rinkeby`
+- Deploy contract to a **Goerli (only)** testnet
+`hh deploy --network goerli`
 
 ##  Frontend (Vite + React + TailwindCSS)
 - Start

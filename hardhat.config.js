@@ -15,19 +15,15 @@ module.exports = {
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
-      chainId: 31337,
-      forking: {
-        url: process.env.MAINNET_RPC_URL,
-      },
-      blockConfirmations: 1,
+      chainId: 31337
     },
     localhost: {
       chainId: 31337,
     },
-    rinkeby: {
-      url: process.env.RINKEBY_RPC_URL,
+    goerli: {
+      url: process.env.GOERLI_RPC_URL,
       accounts: [process.env.PRIVATE_KEY],
-      chainId: 4,
+      chainId: 5,
       blockConfirmations: 6,
     },
   },
@@ -49,6 +45,6 @@ module.exports = {
     apiKey: process.env.ETHERSCAN_API_KEY,
   },
   mocha: {
-    timeout: 200000, // 200s
+    timeout: 600000, // 10min
   },
 };
