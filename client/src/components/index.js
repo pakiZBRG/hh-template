@@ -1,7 +1,7 @@
-import Nav from './Nav'
-import Loader from './Loader'
+import Nav from './Nav';
+import Loader from './Loader';
 
 export {
-    Nav,
-    Loader
-}
+  Nav,
+  Loader,
+};

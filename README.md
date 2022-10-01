@@ -25,3 +25,6 @@
 `npm run dev`
 - Build client for IPFS
 `npm run build`
+
+## Eslint Config
+`npx eslint --init`
