@@ -23,7 +23,7 @@
 ##  Frontend (Vite + React + TailwindCSS)
 - Start
 `npm run dev`
-- Build client for IPFS
+- Build client for deployment on IPFS
 `npm run build`
 
 ## Eslint Config

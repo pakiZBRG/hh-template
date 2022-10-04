@@ -26,12 +26,12 @@ module.exports = {
       chainId: 5,
       blockConfirmations: 6,
     },
-  },
-  gasReporter: {
-    enabled: false,
-    currency: 'USD',
-    outputFile: 'gas-reporter.txt',
-    noColors: true,
+    mumbai: {
+      url: process.env.MUMBAI_RPC_URL,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 80001,
+      blockConfirmations: 6,
+    },
   },
   namedAccounts: {
     deployer: {
@@ -42,7 +42,10 @@ module.exports = {
     },
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: {
+      goerli: process.env.ETHERSCAN_API_KEY,
+      mumbai: process.env.POLYGONSCAN_API_KEY,
+    },
   },
   mocha: {
     timeout: 600000, // 10min

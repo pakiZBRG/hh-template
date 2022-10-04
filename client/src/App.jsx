@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { ToastContainer, toast } from 'react-toastify';
-import { Nav, Loader } from './components';
+import { Nav } from './components';
 import { abi, contractAddress } from './contract';
 import { formatBigNumber } from './utils';
 import 'react-toastify/dist/ReactToastify.css';
 
-let provider; let
-  signer;
+let provider;
+let signer;
 if (window.ethereum) {
-  provider = new ethers.providers.Web3Provider(window.ethereum);
+  provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
   signer = provider.getSigner();
 }
 
 const App = () => {
   const [account, setAccount] = useState({ address: '', balance: '' });
-  const [metamaskMessage, setMetamaskMessage] = useState(false);
-  const [chainMessage, setChainMessage] = useState('');
+  const [installMetamask, setInstallMetamask] = useState(false);
+  const [switchNetwork, setSwitchNetwork] = useState(false);
+  const [chainId, setChainId] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const getContract = async (signerOrProvider) => {
     const network = await provider.getNetwork();
@@ -26,10 +29,18 @@ const App = () => {
   };
 
   const connectWallet = async () => {
-    const accounts = await provider.send('eth_requestAccounts', []);
-    const balance = await signer.getBalance();
-    const numEth = formatBigNumber(balance, 3);
-    setAccount({ address: accounts[0], balance: numEth });
+    try {
+      const accounts = await provider.send('eth_requestAccounts', []);
+      const balance = await signer.getBalance();
+      const numEth = formatBigNumber(balance, 3);
+      setAccount({ address: accounts[0], balance: numEth });
+      localStorage.setItem('nft_marketplace', true);
+      setIsLoggedIn(true);
+    } catch (error) {
+      if (error.code === 4001) {
+        toast.info('Please connect to MetaMask.');
+      }
+    }
   };
 
   const isConnected = async () => {
@@ -39,63 +50,62 @@ const App = () => {
 
   const getCurrentNetwork = async () => {
     const network = await provider.getNetwork();
-    if (contractAddress[+network.chainId]) {
-      setChainMessage('');
-    } else {
-      setChainMessage('Please use Goerli network');
-      if (!contractAddress[+network.chainId]) {
-        await ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x5' }],
-        });
-      }
-      window.location.reload();
-    }
+    setChainId(`0x${network.chainId.toString(16)}`);
+    setSwitchNetwork(Boolean(!contractAddress[+network.chainId]));
   };
 
   useEffect(() => {
     if (typeof ethereum !== 'undefined') {
-      ethereum.on('accountsChanged', async (accounts) => {
+      window.ethereum.on('accountsChanged', (accounts) => {
         if (accounts.length) {
-          await connectWallet();
+          connectWallet();
         } else {
           setAccount({ address: '', balance: '' });
+          setIsLoggedIn(false);
         }
       });
-      ethereum.on('chainChanged', (chainId) => {
-        if (contractAddress[+chainId]) {
-          setChainMessage('');
+      window.ethereum.on('chainChanged', (networkId) => {
+        connectWallet();
+        if (contractAddress[+networkId]) {
+          setSwitchNetwork(false);
         } else {
-          setChainMessage('Please use Goerli network');
+          setSwitchNetwork(true);
         }
       });
 
       getCurrentNetwork();
       isConnected()
-        .then(async () => connectWallet())
+        .then(() => connectWallet())
         .catch((err) => console.log(err.message));
     } else {
-      setMetamaskMessage(true);
+      setInstallMetamask(true);
     }
   }, []);
 
   return (
     <>
       <ToastContainer position="bottom-right" theme="dark" />
-      <div className="min-h-screen gradient-background flex flex-col justify-between">
+      {showModal && <div className="absolute w-screen h-screen bg-gray-900 opacity-80 z-10" />}
+      <div className="min-h-screen gradient-background flex flex-col">
         <Nav
           connectWallet={connectWallet}
           account={account}
-          metamaskMessage={metamaskMessage}
+          installMetamask={installMetamask}
+          switchNetwork={switchNetwork}
+          chainId={chainId}
+          setChainId={setChainId}
+          setShowModal={setShowModal}
+          showModal={showModal}
+          setIsLoggedIn={setIsLoggedIn}
+          isLoggedIn={isLoggedIn}
         />
-        {chainMessage
-          ? <p className="text-center mt-16 text-3xl">{chainMessage}</p>
-          : (
-            <p>
-              Hello
-              <Loader />
-            </p>
-          )}
+        <div className="flex items-center justify-center">
+          {!isLoggedIn
+            ? <p className="text-center mt-16 text-slate-200">Connect to Metamask</p>
+            : (
+              <p className="text-center mt-16 text-slate-200">You are connected</p>
+            )}
+        </div>
       </div>
     </>
   );

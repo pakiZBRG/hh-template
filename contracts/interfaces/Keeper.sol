@@ -25,8 +25,8 @@ contract Contract is KeeperCompatible {
             bytes memory /* performData */
         )
     {
-        upkeepNeeded = (block.timestamp - lastTimeStamp) > interval;
-        return upkeepNeeded;
+        upkeepNeeded = (block.timestamp - s_lastTimeStamp) > i_interval;
+        return (upkeepNeeded, "0x");
     }
 
     function performUpkeep(

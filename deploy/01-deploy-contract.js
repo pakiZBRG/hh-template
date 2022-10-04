@@ -1,12 +1,12 @@
-const { network } = require("hardhat");
-const { developmentChains } = require("../helper-hardhat-config");
-const verify = require("../utils/verify");
+const { network } = require('hardhat');
+const { developmentChains } = require('../helper-hardhat-config');
+const verify = require('../utils/verify');
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
   const { deploy, log } = deployments;
   const { deployer } = await getNamedAccounts();
 
-  await deploy("Contract", {
+  const contract = await deploy('SmartContract', {
     from: deployer,
     args: [],
     log: true,
@@ -14,12 +14,12 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   });
 
   if (
-    !developmentChains.includes(network.name) &&
-    process.env.ETHERSCAN_API_KEY
+    !developmentChains.includes(network.name)
+    && process.env.ETHERSCAN_API_KEY
   ) {
-    await verify(contract.address, args);
+    await verify(contract.address, []);
   }
-  log("\n");
+  log('\n');
 };
 
-module.exports.tags = ["all", "contracts"];
+module.exports.tags = ['all', 'contracts'];
