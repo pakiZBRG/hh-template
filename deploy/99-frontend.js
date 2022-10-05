@@ -12,7 +12,7 @@ const updateContractAddress = async () => {
 
   if (chainId in contractAddress) {
     if (!contractAddress[chainId].includes(contract.address)) {
-      contractAddress[chainId].push(contract.address);
+      contractAddress[chainId] = contract.address;
     }
   } else {
     contractAddress[chainId] = contract.address;

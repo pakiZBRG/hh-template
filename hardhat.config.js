@@ -1,7 +1,6 @@
 require('dotenv').config();
 require('@nomiclabs/hardhat-etherscan');
 require('@nomiclabs/hardhat-waffle');
-require('hardhat-gas-reporter');
 require('solidity-coverage');
 require('hardhat-deploy');
 
@@ -44,7 +43,7 @@ module.exports = {
   etherscan: {
     apiKey: {
       goerli: process.env.ETHERSCAN_API_KEY,
-      mumbai: process.env.POLYGONSCAN_API_KEY,
+      polygonMumbai: process.env.POLYGONSCAN_API_KEY,
     },
   },
   mocha: {

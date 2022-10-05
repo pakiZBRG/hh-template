@@ -8,6 +8,8 @@
 ## 2. Install
 When utlizing the `npm i` command, both contract and client dependecies will be installed. Also, contracts will be deployed and verified to Goerli and Mumbai testnets
 
+> **IMPORTANT** If `npm i` throws an error *ERESOLVE unable to resolve dependency tree* use `npm i --force`
+
 ## 3. Scripts
 - Run client
 `npm run client`
@@ -32,7 +34,7 @@ When utlizing the `npm i` command, both contract and client dependecies will be 
 - Deploy contract to a **Mumabi** testnet
 `hh deploy --network mumbai`
 
-##  Frontend (Vite + React + TailwindCSS)
+## Frontend (Vite + React + TailwindCSS)
 
 ## Eslint Config
 `npx eslint --init`
