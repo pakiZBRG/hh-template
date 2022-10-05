@@ -31,45 +31,45 @@ npm ERR!
 use `npm i --force` instead.
 
 ## Scripts
-- Run client
+Run client
 ```
 npm run client
 ```
-- Run blockchain
+Run blockchain
 ```
 npm run blockchain
 ```
-- Run client and blockchain
+Run client and blockchain
 ```
 npm run dev
 ```
 
 ## Template for building Hardhat projects in Solidity
-- Run the tests
+Run the tests
 ```
 hh test
 ```
-- Run the scripts
+Run the scripts
 ```
 hh run scripts/main.js
 ```
-- Compile the smart contracts
+Compile the smart contracts
 ```
 hh compile
 ```
-- Deploy contracts
+Deploy contracts
 ```
 hh deploy
 ```
-- Spin up your local blockchain to test locally
+Spin up your local blockchain to test locally
 ```
 hh node
 ```
-- Deploy contract to a **Goerli** testnet
+Deploy contract to a **Goerli** testnet
 ```
 hh deploy --network goerli
 ```
-- Deploy contract to a **Mumabi** testnet
+Deploy contract to a **Mumabi** testnet
 ```
 hh deploy --network mumbai
 ```
