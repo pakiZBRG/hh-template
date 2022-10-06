@@ -1,3 +1,5 @@
+Basic Hardhat template for building extensive smart contracts with frontend. It supports Goerli and Mumbai test networks. 
+
 # Hardhat Setup
 - [Setup environment variables](#setup-environment-variables)
 - [Install](#install)
@@ -65,11 +67,11 @@ Spin up your local blockchain to test locally
 ```
 hh node
 ```
-Deploy contract to a **Goerli** testnet
+Deploy contract to **Goerli**
 ```
 hh deploy --network goerli
 ```
-Deploy contract to a **Mumabi** testnet
+Deploy contract to **Mumbai**
 ```
 hh deploy --network mumbai
 ```
