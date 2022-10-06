@@ -10,7 +10,7 @@
     "build": "cd client && npm run build",
     "deploy:goerli": "hh deploy --network goerli",
     "deploy:mumbai": "hh deploy --network mumbai",
-    "postinstall": "cd client && npm i && cd ../ && npm run deploy:goerli && npm run deploy:mumbai"
+    "postinstall": "cd client && npm i && cd ../"
   },
   "keywords": [],
   "author": "pakiZBRG",

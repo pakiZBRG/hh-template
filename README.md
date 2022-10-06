@@ -17,7 +17,7 @@ Basic Hardhat template for building extensive smart contracts with frontend. It 
 - `POLYGONSCAN_API_KEY` - API key from [Polygonscan](https://polygonscan.com/) for contract verification
 
 ## Install
-When utlizing the `npm i` command, both contract and client dependecies will be installed. Also, contracts will be deployed and verified to Goerli and Mumbai testnets
+When utlizing the `npm i` command, both contract and client dependecies will be installed.
 
 ### ERESOLVE unable to resolve dependency tree
 If `npm i` throws an error:
@@ -41,9 +41,17 @@ Run blockchain
 ```
 npm run blockchain
 ```
-Run client and blockchain
+Run client and blockchain (locally)
 ```
 npm run dev
+```
+Deploy to **Goerli** testnet
+```
+npm run deploy:goerli
+```
+Deploy to **Mumbai** testnet
+```
+npm run deploy:mumbai
 ```
 
 ## Template for building Hardhat projects in Solidity
@@ -61,9 +69,9 @@ hh compile
 ```
 Deploy contracts
 ```
-hh deploy
+hh deploy --network network_name
 ```
-Spin up your local blockchain to test locally
+Spin up your local blockchain
 ```
 hh node
 ```
