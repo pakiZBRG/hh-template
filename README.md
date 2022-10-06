@@ -11,8 +11,8 @@ Basic Hardhat template for building extensive smart contracts with frontend. It 
 
 ## Setup environment variables
 - `PRIVATE_KEY` - private key of one of your Metamask accounts
-- `GOERLI_RPC_URL` - Goerli RPC URL from Alchemy
-- `MUMBAI_RPC_URL` - Mumbai RPC URL from Alchemy
+- `GOERLI_RPC_URL` - Goerli RPC URL from [Infura](https://infura.io/dashboard)
+- `MUMBAI_RPC_URL` - Mumbai RPC URL from [Infura](https://infura.io/dashboard)
 - `ETHERSCAN_API_KEY` - API key from [Etherscan](https://etherscan.io/) for contract verification
 - `POLYGONSCAN_API_KEY` - API key from [Polygonscan](https://polygonscan.com/) for contract verification
 
