@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Inconsolata:wght@300&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -9,6 +9,10 @@
       font-family: Montserrat;
       letter-spacing: 0.03em;
   }
+}
+
+.address-font {
+  font-family: Inconsolata;
 }
 
 .gradient-background {

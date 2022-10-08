@@ -3,7 +3,6 @@ import { ethers } from 'ethers';
 import { ToastContainer, toast } from 'react-toastify';
 import { Nav } from './components';
 import { abi, contractAddress } from './contract';
-import { formatBigNumber } from './utils';
 import 'react-toastify/dist/ReactToastify.css';
 
 let provider;
@@ -20,6 +19,7 @@ const App = () => {
   const [chainId, setChainId] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [deployedNetworks, setDeployedNetworks] = useState([]);
 
   const getContract = async (signerOrProvider) => {
     const network = await provider.getNetwork();
@@ -32,8 +32,7 @@ const App = () => {
     try {
       const accounts = await provider.send('eth_requestAccounts', []);
       const balance = await signer.getBalance();
-      const numEth = formatBigNumber(balance, 3);
-      setAccount({ address: accounts[0], balance: numEth });
+      setAccount({ address: accounts[0], balance });
       localStorage.setItem('nft_marketplace', true);
       setIsLoggedIn(true);
     } catch (error) {
@@ -49,6 +48,8 @@ const App = () => {
   };
 
   const getCurrentNetwork = async () => {
+    const available = Object.keys(contractAddress).map((key) => key);
+    setDeployedNetworks(available);
     const network = await provider.getNetwork();
     setChainId(`0x${network.chainId.toString(16)}`);
     setSwitchNetwork(Boolean(!contractAddress[+network.chainId]));
@@ -98,6 +99,7 @@ const App = () => {
           showModal={showModal}
           setIsLoggedIn={setIsLoggedIn}
           isLoggedIn={isLoggedIn}
+          deployedNetworks={deployedNetworks}
         />
         <div className="flex items-center justify-center">
           {!isLoggedIn

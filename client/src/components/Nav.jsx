@@ -6,9 +6,9 @@ import { TiTick } from 'react-icons/ti';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import jazzicon from '@metamask/jazzicon';
 
-import { networks, shortenAddress } from '../utils';
+import { formatBigNumber, networks, shortenAddress } from '../utils';
 
-const Nav = ({ account, installMetamask, connectWallet, switchNetwork, chainId, setChainId, setShowModal, showModal, isLoggedIn, setIsLoggedIn }) => {
+const Nav = ({ account, installMetamask, connectWallet, switchNetwork, chainId, setChainId, setShowModal, showModal, isLoggedIn, setIsLoggedIn, deployedNetworks }) => {
   const [showDialog, setShowDialog] = useState(false);
   const [activeNetwork, setActiveNetwork] = useState({});
   const [copied, setCopied] = useState(false);
@@ -50,21 +50,26 @@ const Nav = ({ account, installMetamask, connectWallet, switchNetwork, chainId, 
   }, [address, avatarRef, switchNetwork, isLoggedIn, showModal]);
 
   const changeNetwork = async (chainName) => {
+    const chain = networks.find((net) => net.chainName === chainName);
     try {
-      const chain = networks.find((net) => net.chainName === chainName);
-      if (chainName === 'Goerli') {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x5' }],
-        });
-        setChainId(chain.chainId);
-      }
       await window.ethereum.request({
-        method: 'wallet_addEthereumChain',
-        params: [chain],
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: chain.chainId }],
       });
       setChainId(chain.chainId);
     } catch (error) {
+      // This error code indicates that the chain has not been added to MetaMask.
+      if (error.code === 4902) {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [chain],
+          });
+          setChainId(chain.chainId);
+        } catch (addError) {
+          console.log(error.message);
+        }
+      }
       console.log(error.message);
     }
   };
@@ -91,7 +96,8 @@ const Nav = ({ account, installMetamask, connectWallet, switchNetwork, chainId, 
                   onMouseEnter={() => setShowDialog(true)}
                   onMouseLeave={() => setShowDialog(false)}
                 >
-                  <img src={activeNetwork.iconUrls[1]} alt="logo" width="20" height="20" className="mr-2" />
+                  {activeNetwork.iconUrls
+                    && <img src={activeNetwork.iconUrls[1]} alt="logo" width="20" height="20" className="mr-2" />}
                   {activeNetwork.chainName}
                 </div>
                 {showDialog
@@ -108,14 +114,15 @@ const Nav = ({ account, installMetamask, connectWallet, switchNetwork, chainId, 
                         onMouseLeave={() => setShowDialog(false)}
                       >
                         <p className="text-sm text-slate-200 mb-3">Select a network</p>
-                        {networks.map((chain) => (
+                        {networks.filter((net) => deployedNetworks.includes(parseInt(net.chainId, 16).toString())).map((chain) => (
                           <div
                             onClick={() => changeNetwork(chain.chainName)}
                             className={`flex justify-between items-center p-1 mb-1 cursor-${chain.chainId !== chainId ? 'pointer' : 'default'}`}
                             key={chain.chainId}
                           >
                             <div className="flex">
-                              <img src={chain.iconUrls[1]} alt="logo" width="20" height="20" />
+                              {chain.iconUrls
+                                ? <img src={chain.iconUrls[1]} alt="logo" width="20" height="20" /> : <span className="ml-5" />}
                               <p className="ml-2 text-white font-bold text-sm">{chain.chainName}</p>
                             </div>
                             {chain.chainId === chainId
@@ -126,9 +133,9 @@ const Nav = ({ account, installMetamask, connectWallet, switchNetwork, chainId, 
                     </>
                   )}
                 <div className="text-sm mr-5 text-white px-[2px] py-[2px] black-glassmorphism rounded-2xl flex items-center">
-                  <p className="font-bold text-base mx-3">{balance}</p>
+                  <p className="font-bold text-base mx-3 address-font">{formatBigNumber(balance, 3)}</p>
                   <div className="flex white-glassmorphism px-3 py-1 rounded-[14.5px] pt-[6px] pb-[2px] cursor-pointer border border-transparent hover:border-slate-600" onClick={() => setShowModal(true)}>
-                    <p className="mr-2 font-bold text-base">{shortenAddress(address)}</p>
+                    <p className="mr-2 font-bold text-base address-font">{shortenAddress(address)}</p>
                     <div ref={avatarRef} />
                   </div>
                 </div>
@@ -159,13 +166,14 @@ const Nav = ({ account, installMetamask, connectWallet, switchNetwork, chainId, 
                         onMouseLeave={() => setShowDialog(false)}
                       >
                         <p className="text-sm text-slate-200 mb-3">Select a supported network</p>
-                        {networks.map((chain) => (
+                        {networks.filter((net) => deployedNetworks.includes(parseInt(net.chainId, 16).toString())).map((chain) => (
                           <div
                             onClick={() => changeNetwork(chain.chainName)}
                             className="flex items-center p-1 mb-1 cursor-pointer"
                             key={chain.chainId}
                           >
-                            <img src={chain.iconUrls[1]} alt="logo" width="20" height="20" />
+                            {chain.iconUrls
+                              ? <img src={chain.iconUrls[1]} alt="logo" width="20" height="20" /> : <span className="ml-5" />}
                             <p className="ml-2 text-white font-bold text-sm">{chain.chainName}</p>
                           </div>
                         ))}
@@ -201,13 +209,13 @@ const Nav = ({ account, installMetamask, connectWallet, switchNetwork, chainId, 
         )}
       {showModal
         && (
-          <div ref={modalRef} className="fixed inset-1/2 -translate-y-1/2 -translate-x-1/2 w-96 h-40 black-glassmorphism rounded-2xl border border-gray-700 z-20 text-white p-4">
+          <div ref={modalRef} className="fixed inset-1/2 -translate-y-1/2 -translate-x-1/2 w-96 h-44 black-glassmorphism rounded-2xl border border-gray-700 z-20 text-white p-4">
             <h3>Account</h3>
             <p className="absolute right-3 top-2 text-3xl cursor-pointer" onClick={() => setShowModal(false)}>&times;</p>
-            <div className="flex justify-between items-center my-5">
+            <div className="flex justify-between items-center mt-3 mb-2">
               <div className="flex items-center">
-                <div ref={avatarRef} className="mt-[4px]" />
-                <p className="ml-2 font-bold text-xl">{shortenAddress(address)}</p>
+                <div ref={avatarRef} className="mt-[6px]" />
+                <p className="ml-2 font-bold address-font text-2xl">{shortenAddress(address)}</p>
               </div>
               <button
                 type="button"
@@ -215,6 +223,9 @@ const Nav = ({ account, installMetamask, connectWallet, switchNetwork, chainId, 
                 onClick={disconnect}
               >Disconnect
               </button>
+            </div>
+            <div className="mb-5 text-lg address-font">
+              {formatBigNumber(balance, 7)} {activeNetwork.nativeCurrency.symbol}
             </div>
             <div className="flex text-sm">
               <p
@@ -235,14 +246,17 @@ const Nav = ({ account, installMetamask, connectWallet, switchNetwork, chainId, 
                     </>
                   )}
               </p>
-              <a
-                target="_blank"
-                href={`${activeNetwork.blockExplorerUrls[0]}/address/${address}`}
-                className="flex items-center hover:underline"
-                rel="noreferrer"
-              >
-                <HiOutlineExternalLink className="mr-1" />View on Exloprer
-              </a>
+              {activeNetwork.blockExplorerUrls
+                && (
+                  <a
+                    target="_blank"
+                    href={`${activeNetwork.blockExplorerUrls[0]}/address/${address}`}
+                    className="flex items-center hover:underline"
+                    rel="noreferrer"
+                  >
+                    <HiOutlineExternalLink className="mr-1" />View on Exloprer
+                  </a>
+                )}
             </div>
           </div>
         )}

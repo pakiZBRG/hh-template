@@ -13,6 +13,16 @@ const formatBigNumber = (price, decimal) => {
 // https://chainid.network/chains.json
 const networks = [
   {
+    chainId: `0x${Number(31337).toString(16)}`,
+    chainName: 'Localhost',
+    nativeCurrency: {
+      name: 'CPAY',
+      symbol: 'CPAY',
+      decimals: 18,
+    },
+    rpcUrls: ['http://localhost:8545'],
+  },
+  {
     chainId: `0x${Number(5).toString(16)}`,
     chainName: 'Goerli',
     nativeCurrency: {
