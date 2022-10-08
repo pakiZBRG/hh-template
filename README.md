@@ -1,4 +1,4 @@
-Basic Hardhat template for building extensive smart contracts with frontend. It supports Goerli and Mumbai test networks. 
+Basic Hardhat template for building extensive smart contracts with frontend. You can test your contracts locally and on testnets (Goerli and Mumbai). It supports Goerli and Mumbai test networks. 
 
 # Hardhat Setup
 - [Setup environment variables](#setup-environment-variables)

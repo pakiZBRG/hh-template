@@ -1,1 +1,1 @@
-[{"type":"constructor","payable":false,"inputs":[]},{"type":"function","name":"getAge","constant":true,"stateMutability":"view","payable":false,"inputs":[],"outputs":[{"type":"uint256"}]}]
+{}
